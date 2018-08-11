@@ -3,7 +3,6 @@
 <?php
 	// initialize errors variable
 	$errors = "";
-		
 	// connect to database
 	$db = mysqli_connect("localhost", "root", "", "todo");
 	
@@ -42,9 +41,26 @@
 			<th style="width: 60px;">Action</th>
 		</tr>
 	</thead>
+	<tbody>		
 
-	<tbody>
 		<?php 
+
+		$id = "";
+		
+		if (!empty($_GET["del_task"])) {
+			$id = $_GET["del_task"];
+			$sql = "DELETE FROM tasks WHERE id = $id"; 
+	
+			if (mysqli_query($db, $sql)) {
+    			mysqli_close($db);
+    			header('Location: index.php'); //If index.php is your main page where you list your all records
+    			exit;
+			} else {
+   	 			echo "Error deleting record";
+			}
+		}
+
+	
 		// select all tasks if page is visited or refreshed
 		$tasks = mysqli_query($db, "SELECT * FROM tasks");
 
@@ -55,7 +71,11 @@
 				<td> <?php echo $i; ?> </td>
 				<td class="task"> <?php echo $row['task']; ?> </td>
 				<td class="delete"> 
-					<a href="index.php?del_task=<?php echo $row['id'] ?>">x</a> 
+					<a 
+						name="btn_delete"
+						href="index.php?del_task=<?php echo $row['id'] ?>"
+			
+					>x</a> 
 				</td>
 			</tr>
 		<?php $i++; } ?>	
