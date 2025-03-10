@@ -47,17 +47,20 @@
 
 		$id = "";
 		
-		if (!empty($_GET["del_task"])) {
-			$id = $_GET["del_task"];
-			$sql = "DELETE FROM tasks WHERE id = $id"; 
-	
-			if (mysqli_query($db, $sql)) {
-    			mysqli_close($db);
-    			header('Location: index.php'); //If index.php is your main page where you list your all records
-    			exit;
-			} else {
-   	 			echo "Error deleting record";
-			}
+        if (!empty($_GET["del_task"])) {
+            $id = $_GET["del_task"];
+            $stmt = $db->prepare("DELETE FROM tasks WHERE id = ?");
+            $stmt->bind_param("i", $id);
+            
+            if ($stmt->execute()) {
+                $stmt->close();
+                $db->close();
+                header('Location: index.php'); // If index.php is your main page where you list your all records
+                exit;
+            } else {
+                echo "Error deleting record";
+            }
+        }
 		}
 
 	
