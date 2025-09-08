@@ -49,9 +49,11 @@
 		
 		if (!empty($_GET["del_task"])) {
 			$id = $_GET["del_task"];
-			$sql = "DELETE FROM tasks WHERE id = $id"; 
-	
-			if (mysqli_query($db, $sql)) {
+			$sql = "DELETE FROM tasks WHERE id = ?";
+			$stmt = mysqli_prepare($db, $sql);
+			mysqli_stmt_bind_param($stmt, "i", $id);
+			
+			if (mysqli_stmt_execute($stmt)) {
     			mysqli_close($db);
     			header('Location: index.php'); //If index.php is your main page where you list your all records
     			exit;
